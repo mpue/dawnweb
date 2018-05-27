@@ -1,0 +1,124 @@
+import * as $ from "jquery";
+
+let image = $('<image id="rain" src="img/dawn_part1.jpg"/>');
+let imgDiv = $('<div id="scroller" class="scroller"></div>');
+
+let titles = ["DAWN", "an animated image", "Sound and Painting by Matthias Pueski"];
+let startDiv = $('<div id="start" class="start">Click me</div>');
+let titleDiv = $('<div id="title" class="title"></div>');
+
+
+$("body").append(titleDiv);
+
+let left = $(window).width() / 2 - titleDiv.width() / 2;
+let top = $(window).height() / 2 - titleDiv.height() / 2;
+
+titleDiv.css("left", left);
+titleDiv.css("top", top);
+
+startDiv.css("left", left);
+startDiv.css("top", top);
+
+imgDiv.append(image);
+imgDiv.fadeOut(0);
+
+$("body").append(imgDiv);
+
+let offset = 0;
+
+image.css("height", $(window).height());
+
+let move = setInterval(() =>  {
+    offset -= 1;
+    $(".scroller").css("left", offset + "px");
+}, 20);
+
+
+let elem = document.getElementById("scroller");
+if (elem.requestFullscreen) {
+  elem.requestFullscreen();
+}
+
+let titleIndex = 0;
+
+titleDiv.fadeOut(0);
+
+function nextTitle() {
+ 
+  titleDiv.html(titles[titleIndex])
+
+  if (titleIndex < titles.length) {
+    titleIndex++;
+    titleDiv.fadeIn(2000);
+    setTimeout(() => {
+      titleDiv.fadeOut(2000,nextTitle);
+    },2000)
+  }
+
+}
+
+function start() {
+  imgDiv.fadeIn(8000);
+}
+
+document.documentElement.style.overflow = "hidden";
+
+
+$(document).ready(() => {
+
+  $("body").append(startDiv);
+
+  startDiv.click(()=> {
+
+    startDiv.fadeOut(1000);
+
+    setTimeout(() => {
+      // let audio = new Audio("dist/score.mp3");
+      // audio.play();
+      nextTitle();
+    }, 3000)
+
+    setTimeout(() =>  {
+      start(); 
+    }, titles.length * 2 * 2000 + 2000);
+  });
+  image.click(() => {
+    clearInterval(move);
+  });
+});
+
+
+var _startX = 0;
+var _startY = 0;
+var _offsetX = 0;           
+var _offsetY = 0;
+var _dragElement : HTMLElement;
+
+$("#rain").on("mousedown touchstart",(event) =>{
+  $("#rain").on("mousemove", (event)=> {
+    if (_dragElement != null) {
+      _dragElement.style.left = (_offsetX + event.clientX - _startX) + 'px';
+      _dragElement.style.top = (_offsetY + event.clientY - _startY) + 'px';
+    }
+    });
+    _startX = event.clientX;
+    _startY = event.clientY;
+    _offsetX = document.getElementById('scroller').offsetLeft;
+    _offsetY = document.getElementById('scroller').offsetTop;
+    _dragElement = document.getElementById('scroller');
+
+});
+
+
+$("#rain").on("mouseup", () => {
+    document.onmousemove = null;
+    _dragElement=null;
+});
+
+
+
+
+
+
+
+
