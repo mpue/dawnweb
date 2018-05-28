@@ -67,13 +67,14 @@ export module Dawn {
                     let width = $(window).width();
                     let left = this._offsetX + event.clientX - this._startX;
 
+                    /*
                     if (Math.abs(left) + width > this._images[0].width()) {
                         left = -(this._images[0].width() - width); 
                     }
                     if (left > 0) {
                         left = 0 ;
                     }
-
+                    */
                     this._imgDiv.css("left", left + 'px');
                     // this._imgDiv.css("top", (this._offsetY + event.clientY - this._startY) + 'px');
                     //this._startY = 0;
@@ -90,8 +91,17 @@ export module Dawn {
         public addImage(image : string) {
             
             let img = $('<image id="rain' + this._images.length + 1 +'" src="'+image+'"/>'); 
-            this._imgDiv.append(img);
+            let wrapper = $('<div class="wrapper"></div>');
+            wrapper.append(img);
+
+            this._imgDiv.append(wrapper);
             this._images.push(img);
+            
+            wrapper.css("position", "absolute");
+            wrapper.css("display", "inline-block");
+            wrapper.css("top", "0px");
+            wrapper.css("left", (this._images.length - 1) * 5589 +"px");
+
             img.css("height", $(window).height());
         }
 
@@ -100,13 +110,14 @@ export module Dawn {
     
             
             let width = $(window).width();
+            /*
             if (Math.abs(this._offset) + width > this._images[0].width()) {
                 this._offset = -(this._images[0].width() - width); 
             }
             if (this._offset > 0) {
                 this._offset = 0 ;
             }
-
+            */
             console.log(this._offset);
 
             this._offset-= this._velocity * 10;
